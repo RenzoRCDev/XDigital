@@ -44,8 +44,8 @@ def lambda_handler(event, context):
                         }
                     lista_productos.append(dict_producto)
 
-                # with open("Lista_Productos.json", "w", encoding='utf-8') as f:
-                #     json.dump(lista_productos, f, ensure_ascii=False, indent=2, default=manejo_decimal)
+                with open("Lista_Productos.json", "w", encoding='utf-8') as f:
+                    json.dump(lista_productos, f, ensure_ascii=False, indent=2, default=manejo_decimal)
                 return lista_productos
     except Exception as e:
         return {'Error': str(e)}
