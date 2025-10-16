@@ -17,7 +17,7 @@ def lambda_handler(event, context):
 
         # Stored procedure para obtener listado de productos:
         sp = 'sp_ListarProductos'
-
+        params = ()
 
         with pyodbc.connect(f"Driver={driver};"
                             f"Server={server};"
@@ -26,7 +26,7 @@ def lambda_handler(event, context):
                             f"PWD={password};") as conn:
 
             with conn.cursor() as cursor:
-                cursor.execute(sp)
+                cursor.execute(sp, params)
                 columns = [col[0] for col in cursor.description]
                 rows = cursor.fetchall()
                 productos = [dict(zip(columns, row)) for row in rows]
@@ -49,3 +49,5 @@ def lambda_handler(event, context):
                 return lista_productos
     except Exception as e:
         return {'Error': str(e)}
+
+lambda_handler({}, {})
