@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">X-Digital Imports</string>
+    
+    <!-- Pantalla Principal -->
+    <string name="titulo_principal">X-Digital Imports</string>
+    <string name="buscar_productos">Buscar productos...</string>
+    <string name="categorias">Categorías</string>
+    <string name="carrito">Carrito</string>
+    <string name="ver_todos">Ver Todos</string>
+    
+    <!-- Categorías -->
+    <string name="celulares">Celulares</string>
+    <string name="camaras">Cámaras</string>
+    <string name="proyectores">Proyectores</string>
+    <string name="laptops">Laptops</string>
+    <string name="audifonos">Audífonos</string>
+    <string name="tablets">Tablets</string>
+    
+    <!-- Producto -->
+    <string name="precio">Precio</string>
+    <string name="marca">Marca</string>
+    <string name="stock">Stock</string>
+    <string name="calificacion">Calificación</string>
+    <string name="caracteristicas">Características</string>
+    <string name="agregar_carrito">Agregar al Carrito</string>
+    <string name="comprar_ahora">Comprar Ahora</string>
+    <string name="descripcion">Descripción</string>
+    
+    <!-- Carrito -->
+    <string name="mi_carrito">Mi Carrito</string>
+    <string name="total">Total</string>
+    <string name="proceder_pago">Proceder al Pago</string>
+    <string name="carrito_vacio">Tu carrito está vacío</string>
+    <string name="continuar_comprando">Continuar Comprando</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="cantidad">Cantidad</string>
+    
+    <!-- Navegación -->
+    <string name="inicio">Inicio</string>
+    <string name="buscar">Buscar</string>
+    <string name="categoria">Categorías</string>
+    <string name="perfil">Perfil</string>
+    <string name="soporte">Soporte</string>
+    
+    <!-- Pantallas adicionales -->
+    <string name="titulo_categorias">Categorías</string>
+    <string name="titulo_soporte">Soporte</string>
+    <string name="titulo_perfil">Mi Perfil</string>
+    
+    <!-- Perfil de usuario -->
+    <string name="nombre_usuario">Nombre de Usuario</string>
+    <string name="email_usuario">usuario@xdigital.com</string>
+    <string name="telefono_usuario">+51 999 999 999</string>
+    <string name="direccion_usuario">Lima, Perú</string>
+    <string name="editar_perfil">Editar Perfil</string>
+    <string name="cerrar_sesion">Cerrar Sesión</string>
+    
+    <!-- Soporte -->
+    <string name="contacto">Contacto</string>
+    <string name="telefono_soporte">+51 999 999 999</string>
+    <string name="email_soporte">soporte@xdigital.com</string>
+    <string name="horario_atencion">Lunes a Viernes: 9:00 AM - 6:00 PM</string>
+    <string name="whatsapp">WhatsApp</string>
+    <string name="enviar_mensaje">Enviar Mensaje</string>
+    
+    <!-- Mensajes -->
+    <string name="producto_agregado">Producto agregado al carrito</string>
+    <string name="error_cargar_productos">Error al cargar productos</string>
+    <string name="sin_resultados">No se encontraron productos</string>
+    <string name="intentar_nuevamente">Intentar nuevamente</string>
+    
+    <!-- Moneda -->
+    <string name="moneda">S/</string>
+</resources>
