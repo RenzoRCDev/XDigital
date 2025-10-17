@@ -207,7 +207,11 @@ class MainActivity : AppCompatActivity() {
     private fun filtrarPorCategoria(categoria: CategoriaProducto) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                productosActuales = repositorioAWS.obtenerProductosPorCategoria(categoria)
+                if (categoria == CategoriaProducto.TODOS) {
+                    productosActuales = repositorioAWS.obtenerTodosLosProductos()
+                } else {
+                    productosActuales = repositorioAWS.obtenerProductosPorCategoria(categoria)
+                }
                 actualizarAdaptadorProductos()
             } catch (e: Exception) {
                 Toast.makeText(this@MainActivity, "Error al filtrar productos: ${e.message}", Toast.LENGTH_SHORT).show()

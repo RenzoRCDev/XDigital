@@ -11,6 +11,9 @@ class AdaptadorCategorias(
     private val onCategoriaClick: (CategoriaProducto) -> Unit
 ) : RecyclerView.Adapter<AdaptadorCategorias.CategoriaViewHolder>() {
 
+    // Agregar "Todos" al inicio de la lista
+    private val categoriasConTodos = listOf(CategoriaProducto.TODOS) + categorias
+
     class CategoriaViewHolder(val binding: ItemCategoriaBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriaViewHolder {
@@ -23,7 +26,7 @@ class AdaptadorCategorias(
     }
 
     override fun onBindViewHolder(holder: CategoriaViewHolder, position: Int) {
-        val categoria = categorias[position]
+        val categoria = categoriasConTodos[position]
         holder.binding.nombreCategoria.text = categoria.nombre
         
         holder.itemView.setOnClickListener {
@@ -31,5 +34,5 @@ class AdaptadorCategorias(
         }
     }
 
-    override fun getItemCount(): Int = categorias.size
+    override fun getItemCount(): Int = categoriasConTodos.size
 }
