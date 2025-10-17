@@ -37,14 +37,55 @@ class RepositorioProductosAWS {
     
     suspend fun buscarProductos(consulta: String): List<Producto> = withContext(Dispatchers.IO) {
         try {
+            android.util.Log.d("RepositorioAWS", "Buscando productos con consulta: '$consulta'")
             val response = apiService.buscarProductos(consulta)
+            android.util.Log.d("RepositorioAWS", "Respuesta de API: ${response.code()}")
             if (response.isSuccessful) {
                 val productosAWS = response.body() ?: emptyList()
-                productosAWS.map { it.toProducto() }
+                android.util.Log.d("RepositorioAWS", "Productos AWS encontrados: ${productosAWS.size}")
+                
+                // Para cada producto de búsqueda, obtener su imagen principal
+                val productosConImagenes = productosAWS.map { productoAWS ->
+                    try {
+                        // Obtener la imagen principal del producto
+                        val imagenResponse = apiService.obtenerImagenesProducto(productoAWS.idProducto.toString())
+                        if (imagenResponse.isSuccessful) {
+                            val imagenes = imagenResponse.body() ?: emptyList()
+                            val imagenPrincipal = if (imagenes.isNotEmpty()) imagenes[0].urlImagen else null
+                            
+                            // Crear un ProductoAWS con la imagen principal
+                            val productoConImagen = productoAWS.copy(
+                                urlImagen = imagenPrincipal,
+                                stock = 10 // Valor por defecto para búsqueda
+                            )
+                            productoConImagen.toProducto()
+                        } else {
+                            // Si no se puede obtener la imagen, usar placeholder
+                            val productoConImagen = productoAWS.copy(
+                                urlImagen = "https://via.placeholder.com/300x300?text=Sin+Imagen",
+                                stock = 10
+                            )
+                            productoConImagen.toProducto()
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("RepositorioAWS", "Error al obtener imagen para producto ${productoAWS.idProducto}", e)
+                        // En caso de error, usar placeholder
+                        val productoConImagen = productoAWS.copy(
+                            urlImagen = "https://via.placeholder.com/300x300?text=Sin+Imagen",
+                            stock = 10
+                        )
+                        productoConImagen.toProducto()
+                    }
+                }
+                
+                android.util.Log.d("RepositorioAWS", "Productos convertidos: ${productosConImagenes.size}")
+                productosConImagenes
             } else {
+                android.util.Log.e("RepositorioAWS", "Error en respuesta: ${response.code()}")
                 emptyList()
             }
         } catch (e: Exception) {
+            android.util.Log.e("RepositorioAWS", "Error al buscar productos", e)
             emptyList()
         }
     }

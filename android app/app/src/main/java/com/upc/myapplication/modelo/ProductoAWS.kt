@@ -6,8 +6,11 @@ data class ProductoAWS(
     @SerializedName("idproducto")
     val idProducto: Int,
     
+    @SerializedName("nombre")
+    val nombre: String? = null, // Campo para la API de búsqueda
+    
     @SerializedName("nombre_producto")
-    val nombreProducto: String,
+    val nombreProducto: String? = null, // Campo para la API principal
     
     @SerializedName("descripcion")
     val descripcion: String,
@@ -16,7 +19,7 @@ data class ProductoAWS(
     val precio: Double,
     
     @SerializedName("stock")
-    val stock: Int,
+    val stock: Int? = null, // Opcional para la API de búsqueda
     
     @SerializedName("categoria")
     val categoria: String,
@@ -25,18 +28,18 @@ data class ProductoAWS(
     val marca: String,
     
     @SerializedName("UrlImagen")
-    val urlImagen: String
+    val urlImagen: String? = null // Opcional para la API de búsqueda
 ) {
     fun toProducto(): Producto {
         return Producto(
             id = idProducto.toString(),
-            nombre = nombreProducto,
+            nombre = nombre ?: nombreProducto ?: "Producto sin nombre", // Prioriza 'nombre', luego 'nombreProducto'
             precio = precio,
             categoria = mapCategoria(categoria),
             marca = marca,
             descripcion = descripcion,
-            imageUrl = urlImagen,
-            stock = stock,
+            imageUrl = urlImagen ?: "https://via.placeholder.com/300x300?text=Sin+Imagen", // Imagen placeholder
+            stock = stock ?: 10, // Valor por defecto para productos de búsqueda
             calificacion = 4.5, // Valor por defecto
             caracteristicas = emptyList() // Lista vacía por defecto
         )
