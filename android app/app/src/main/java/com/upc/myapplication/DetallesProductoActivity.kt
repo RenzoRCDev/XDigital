@@ -39,7 +39,6 @@ class DetallesProductoActivity : AppCompatActivity() {
         // Configurar la barra de estado
         window.statusBarColor = getColor(R.color.status_bar_color)
         
-        // Inicializar CarritoManager
         CarritoManager.init(this)
         
         // Obtener el producto del intent
@@ -104,7 +103,6 @@ class DetallesProductoActivity : AppCompatActivity() {
         // Configurar RecyclerView para la galería
         binding.recyclerGaleria.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         
-        // Inicializar adaptador vacío
         adaptadorGaleria = AdaptadorGaleriaImagenes(emptyList()) { imagen ->
             // Al hacer clic en una imagen, actualizar la imagen principal
             Glide.with(this)

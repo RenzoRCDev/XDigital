@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.content.Intent
 import android.widget.Toast
+import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -32,9 +33,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerCategorias: RecyclerView
     private lateinit var recyclerProductos: RecyclerView
     private lateinit var campoBusqueda: TextInputEditText
-    private lateinit var fabCarrito: FloatingActionButton
+    private lateinit var btnMenu: ImageButton
+    private lateinit var btnPerfil: ImageButton
+    private lateinit var btnCarrito: ImageButton
     private lateinit var contadorCarrito: android.widget.TextView
-    private lateinit var bottomNavigation: BottomNavigationView
     
     private lateinit var adaptadorCategorias: AdaptadorCategorias
     private lateinit var adaptadorProductos: AdaptadorProductos
@@ -50,7 +52,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         
-        // Inicializar el CarritoManager
         CarritoManager.init(this)
         
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -71,9 +72,10 @@ class MainActivity : AppCompatActivity() {
         recyclerCategorias = findViewById(R.id.recycler_categorias)
         recyclerProductos = findViewById(R.id.recycler_productos)
         campoBusqueda = findViewById(R.id.campo_busqueda)
-        fabCarrito = findViewById(R.id.fab_carrito)
+        btnMenu = findViewById<ImageButton>(R.id.btn_menu)
+        btnPerfil = findViewById<ImageButton>(R.id.btn_perfil)
+        btnCarrito = findViewById<ImageButton>(R.id.btn_carrito)
         contadorCarrito = findViewById(R.id.contador_carrito)
-        bottomNavigation = findViewById(R.id.bottom_navigation)
     }
     
     private fun configurarRecyclerViews() {
@@ -121,32 +123,20 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun configurarCarrito() {
-        fabCarrito.setOnClickListener {
+        btnCarrito.setOnClickListener {
             mostrarCarrito()
         }
     }
     
     private fun configurarNavegacionInferior() {
-        bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_inicio -> {
-                    // Ya estamos en la pantalla de inicio
-                    true
-                }
-                R.id.nav_categorias -> {
-                    mostrarCategorias()
-                    true
-                }
-                R.id.nav_soporte -> {
-                    mostrarSoporte()
-                    true
-                }
-                R.id.nav_perfil -> {
-                    mostrarPerfil()
-                    true
-                }
-                else -> false
-            }
+        // Configurar menú desplegable
+        btnMenu.setOnClickListener {
+            mostrarMenuDesplegable()
+        }
+        
+        // Configurar botón de perfil
+        btnPerfil.setOnClickListener {
+            mostrarPerfil()
         }
     }
     
@@ -283,5 +273,23 @@ class MainActivity : AppCompatActivity() {
     private fun mostrarPerfil() {
         val intent = android.content.Intent(this, PerfilActivity::class.java)
         startActivity(intent)
+    }
+    
+    private fun mostrarMenuDesplegable() {
+        val opciones = arrayOf("Home", "Categorías", "Soporte")
+        
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Navegación")
+        builder.setItems(opciones) { _, which ->
+            when (which) {
+                0 -> {
+                    // Ya estamos en Home
+                    Toast.makeText(this, "Ya estás en la página principal", Toast.LENGTH_SHORT).show()
+                }
+                1 -> mostrarCategorias()
+                2 -> mostrarSoporte()
+            }
+        }
+        builder.show()
     }
 }

@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
-            android:textColor="@color/primary_blue"
+            android:textColor="#83919D"
             android:textSize="16sp"
             android:textStyle="bold"
             tools:text="S/ 1,299.99" />
@@ -94,13 +94,16 @@
         <!-- Botón de agregar al carrito -->
         <Button
             android:id="@+id/boton_agregar_carrito"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="36dp"
+            android:background="@drawable/boton_agregar_carrito"
+            android:clickable="true"
+            android:focusable="true"
             android:text="@string/agregar_carrito"
-            android:textSize="11sp"
-            app:cornerRadius="16dp" />
-
+            android:textColor="#FFFFFF"
+            android:textColorHint="#E7ACAC"
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

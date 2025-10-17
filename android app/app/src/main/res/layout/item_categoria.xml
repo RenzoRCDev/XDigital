@@ -12,7 +12,7 @@
         android:id="@+id/nombre_categoria"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/category_background"
+            android:background="@drawable/fondo_categoria"
         android:padding="16dp"
         android:text="Categoría"
         android:textColor="@android:color/white"
