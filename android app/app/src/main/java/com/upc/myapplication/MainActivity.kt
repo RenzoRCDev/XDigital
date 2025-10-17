@@ -222,12 +222,9 @@ class MainActivity : AppCompatActivity() {
     private fun buscarProductos(consulta: String) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                android.util.Log.d("MainActivity", "Buscando productos con consulta: '$consulta'")
                 productosActuales = repositorioAWS.buscarProductos(consulta)
-                android.util.Log.d("MainActivity", "Productos encontrados: ${productosActuales.size}")
                 actualizarAdaptadorProductos()
             } catch (e: Exception) {
-                android.util.Log.e("MainActivity", "Error al buscar productos", e)
                 Toast.makeText(this@MainActivity, "Error al buscar productos: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
