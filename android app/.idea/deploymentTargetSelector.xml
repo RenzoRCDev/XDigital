@@ -2,11 +2,7 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-<<<<<<< HEAD:.idea/deploymentTargetSelector.xml
-      <SelectionState runConfigName="MainActivity">
-=======
       <SelectionState runConfigName="app">
->>>>>>> fa0b953022cb2ff2aae045db75ac61ca29fc0f98:android app/.idea/deploymentTargetSelector.xml
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
