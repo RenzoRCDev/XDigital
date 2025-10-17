@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fabCarrito: FloatingActionButton
     private lateinit var contadorCarrito: android.widget.TextView
     private lateinit var bottomNavigation: BottomNavigationView
-    
     private lateinit var adaptadorCategorias: AdaptadorCategorias
     private lateinit var adaptadorProductos: AdaptadorProductos
     
@@ -214,7 +213,7 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun mostrarPerfil() {
-        val intent = android.content.Intent(this, PerfilActivity::class.java)
+        val intent = android.content.Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 }
