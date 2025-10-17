@@ -3,6 +3,7 @@ package com.upc.myapplication.datos
 import com.upc.myapplication.api.ApiClient
 import com.upc.myapplication.modelo.CategoriaProducto
 import com.upc.myapplication.modelo.Producto
+import com.upc.myapplication.modelo.ProductoImagen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -42,6 +43,19 @@ class RepositorioProductosAWS {
                 it.nombre.contains(consulta, ignoreCase = true) ||
                 it.marca.contains(consulta, ignoreCase = true) ||
                 it.descripcion.contains(consulta, ignoreCase = true)
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+    
+    suspend fun obtenerImagenesProducto(id: String): List<ProductoImagen> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.obtenerImagenesProducto(id)
+            if (response.isSuccessful) {
+                response.body() ?: emptyList()
+            } else {
+                emptyList()
             }
         } catch (e: Exception) {
             emptyList()
