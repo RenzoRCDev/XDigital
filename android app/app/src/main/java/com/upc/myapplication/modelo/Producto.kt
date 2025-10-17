@@ -16,11 +16,17 @@ data class Producto(
 ) : Serializable
 
 enum class CategoriaProducto(val nombre: String) : Serializable {
-    CELULARES("Celulares"),
+    LAPTOPS("Laptops"),
+    CELULARES("Smartphones"),
+    TABLETS("Tablets"),
+    MONITORES("Monitores"),
+    AUDIFONOS("Auriculares"),
+    TECLADOS("Teclados"),
+    MOUSES("Mouses"),
+    SMARTWATCHES("Smartwatches"),
+    ALMACENAMIENTO("Almacenamiento"),
+    ACCESORIOS("Accesorios"),
     CAMARAS("Cámaras"),
     PROYECTORES("Proyectores"),
-    LAPTOPS("Laptops"),
-    AUDIFONOS("Audífonos"),
-    TABLETS("Tablets"),
     TODOS("Todos")
 }

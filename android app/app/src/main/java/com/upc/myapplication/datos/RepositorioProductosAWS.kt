@@ -37,12 +37,12 @@ class RepositorioProductosAWS {
     
     suspend fun buscarProductos(consulta: String): List<Producto> = withContext(Dispatchers.IO) {
         try {
-            // Como la API no tiene búsqueda, obtenemos todos y filtramos localmente
-            val todosLosProductos = obtenerTodosLosProductos()
-            todosLosProductos.filter { 
-                it.nombre.contains(consulta, ignoreCase = true) ||
-                it.marca.contains(consulta, ignoreCase = true) ||
-                it.descripcion.contains(consulta, ignoreCase = true)
+            val response = apiService.buscarProductos(consulta)
+            if (response.isSuccessful) {
+                val productosAWS = response.body() ?: emptyList()
+                productosAWS.map { it.toProducto() }
+            } else {
+                emptyList()
             }
         } catch (e: Exception) {
             emptyList()
@@ -59,6 +59,22 @@ class RepositorioProductosAWS {
             }
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+    
+    suspend fun obtenerTodasLasCategorias(): List<CategoriaProducto> = withContext(Dispatchers.IO) {
+        try {
+            val response = apiService.obtenerTodasLasCategorias()
+            if (response.isSuccessful) {
+                val categoriasAWS = response.body() ?: emptyList()
+                categoriasAWS.map { it.toCategoriaProducto() }
+            } else {
+                // Si falla la API, usar categorías por defecto
+                CategoriaProducto.values().toList()
+            }
+        } catch (e: Exception) {
+            // Si hay error, usar categorías por defecto
+            CategoriaProducto.values().toList()
         }
     }
 }

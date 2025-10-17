@@ -77,9 +77,9 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun configurarRecyclerViews() {
-        // Configurar RecyclerView de categorías
+        // Configurar RecyclerView de categorías (se cargará desde la API)
         adaptadorCategorias = AdaptadorCategorias(
-            CategoriaProducto.values().toList()
+            emptyList()
         ) { categoria ->
             filtrarPorCategoria(categoria)
         }
@@ -151,8 +151,46 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun cargarDatosIniciales() {
-        mostrarTodosLosProductos()
+        cargarCategorias()
+        
+        // Verificar si se seleccionó una categoría específica
+        val categoriaSeleccionada = intent.getStringExtra("categoria_seleccionada")
+        if (categoriaSeleccionada != null) {
+            try {
+                val categoria = CategoriaProducto.valueOf(categoriaSeleccionada)
+                filtrarPorCategoria(categoria)
+            } catch (e: Exception) {
+                mostrarTodosLosProductos()
+            }
+        } else {
+            mostrarTodosLosProductos()
+        }
+        
         actualizarContadorCarrito()
+    }
+    
+    private fun cargarCategorias() {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val categorias = repositorioAWS.obtenerTodasLasCategorias()
+                adaptadorCategorias = AdaptadorCategorias(
+                    categorias
+                ) { categoria ->
+                    filtrarPorCategoria(categoria)
+                }
+                recyclerCategorias.adapter = adaptadorCategorias
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Error al cargar categorías: ${e.message}", Toast.LENGTH_SHORT).show()
+                // Usar categorías por defecto en caso de error
+                val categoriasPorDefecto = CategoriaProducto.values().toList()
+                adaptadorCategorias = AdaptadorCategorias(
+                    categoriasPorDefecto
+                ) { categoria ->
+                    filtrarPorCategoria(categoria)
+                }
+                recyclerCategorias.adapter = adaptadorCategorias
+            }
+        }
     }
     
     private fun mostrarTodosLosProductos() {

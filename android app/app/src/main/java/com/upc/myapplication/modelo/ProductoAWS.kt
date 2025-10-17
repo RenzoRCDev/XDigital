@@ -45,11 +45,17 @@ data class ProductoAWS(
     private fun mapCategoria(categoriaAWS: String): CategoriaProducto {
         return when (categoriaAWS.lowercase()) {
             "laptops" -> CategoriaProducto.LAPTOPS
-            "smartphones", "celulares" -> CategoriaProducto.CELULARES
+            "smartphones" -> CategoriaProducto.CELULARES
             "tablets" -> CategoriaProducto.TABLETS
-            "monitores", "proyectores" -> CategoriaProducto.PROYECTORES
-            "auriculares", "audifonos" -> CategoriaProducto.AUDIFONOS
+            "monitores" -> CategoriaProducto.MONITORES
+            "auriculares" -> CategoriaProducto.AUDIFONOS
+            "teclados" -> CategoriaProducto.TECLADOS
+            "mouses" -> CategoriaProducto.MOUSES
+            "smartwatches" -> CategoriaProducto.SMARTWATCHES
+            "almacenamiento" -> CategoriaProducto.ALMACENAMIENTO
+            "accesorios" -> CategoriaProducto.ACCESORIOS
             "camaras" -> CategoriaProducto.CAMARAS
+            "proyectores" -> CategoriaProducto.PROYECTORES
             else -> CategoriaProducto.TODOS
         }
     }
