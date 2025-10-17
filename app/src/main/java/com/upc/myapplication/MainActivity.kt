@@ -19,9 +19,13 @@ import com.upc.myapplication.adaptadores.AdaptadorCategorias
 import com.upc.myapplication.adaptadores.AdaptadorProductos
 import com.upc.myapplication.datos.CarritoManager
 import com.upc.myapplication.datos.RepositorioProductos
+import com.upc.myapplication.datos.RepositorioProductosAWS
 import com.upc.myapplication.modelo.CarritoItem
 import com.upc.myapplication.modelo.CategoriaProducto
 import com.upc.myapplication.modelo.Producto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     
@@ -35,8 +39,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adaptadorCategorias: AdaptadorCategorias
     private lateinit var adaptadorProductos: AdaptadorProductos
     
+    // Repositorio para obtener datos de la API
+    private val repositorioAWS = RepositorioProductosAWS()
+    
     // El carrito ahora se maneja con CarritoManager
-    private var productosActuales = RepositorioProductos.obtenerTodosLosProductos()
+    private var productosActuales = emptyList<Producto>()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,18 +156,36 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun mostrarTodosLosProductos() {
-        productosActuales = RepositorioProductos.obtenerTodosLosProductos()
-        actualizarAdaptadorProductos()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                productosActuales = repositorioAWS.obtenerTodosLosProductos()
+                actualizarAdaptadorProductos()
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Error al cargar productos: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     
     private fun filtrarPorCategoria(categoria: CategoriaProducto) {
-        productosActuales = RepositorioProductos.obtenerProductosPorCategoria(categoria)
-        actualizarAdaptadorProductos()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                productosActuales = repositorioAWS.obtenerProductosPorCategoria(categoria)
+                actualizarAdaptadorProductos()
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Error al filtrar productos: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     
     private fun buscarProductos(consulta: String) {
-        productosActuales = RepositorioProductos.buscarProductos(consulta)
-        actualizarAdaptadorProductos()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                productosActuales = repositorioAWS.buscarProductos(consulta)
+                actualizarAdaptadorProductos()
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Error al buscar productos: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     
     private fun actualizarAdaptadorProductos() {
