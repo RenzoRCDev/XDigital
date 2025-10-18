@@ -22,6 +22,7 @@ import com.upc.myapplication.datos.RepositorioProductos
 import com.upc.myapplication.modelo.CarritoItem
 import com.upc.myapplication.modelo.CategoriaProducto
 import com.upc.myapplication.modelo.Producto
+import com.upc.myapplication.SessionManager
 
 class MainActivity : AppCompatActivity() {
     
@@ -44,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         
         // Inicializar el CarritoManager
         CarritoManager.init(this)
+
+        SessionManager.init(this)
         
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -213,7 +216,13 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun mostrarPerfil() {
-        val intent = android.content.Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        //validamos si ya inicio sesion
+        if(SessionManager.isLoggedIn()){
+            val intent = Intent(this,PerfilActivity::class.java)
+            startActivity(intent)
+        }else{
+            val intent = android.content.Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
