@@ -25,6 +25,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -45,6 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:padding="16dp">
 
                     <ImageView
@@ -52,13 +54,12 @@
                         android:layout_height="80dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="16dp"
-                        android:background="@color/design_default_color_primary"
+                        android:background="@drawable/circulo_bg"
                         android:padding="20dp"
-                        android:src="@android:drawable/ic_menu_myplaces"
-                        android:tint="@android:color/white" />
+                        android:src="@drawable/ic_profile"/>
 
                     <TextView
-                        android:id="@+id/texto_nombre_usuario"
+                        android:id="@+id/txtNombreUsuario"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -69,7 +70,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/texto_email_usuario"
+                        android:id="@+id/txtEmailUsuario"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
@@ -79,7 +80,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/texto_telefono_usuario"
+                        android:id="@+id/txtTelefonoUsuario"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
@@ -93,7 +94,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="@string/direccion_usuario"
+                        android:text="Cliente Registrado"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="14sp" />
 

@@ -1,5 +1,6 @@
 package com.upc.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,8 @@ class PerfilActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil)
-        
+        SessionManager.init(this)
+
         inicializarVistas()
         configurarToolbar()
         configurarBotones()
@@ -28,9 +30,9 @@ class PerfilActivity : AppCompatActivity() {
     private fun inicializarVistas() {
         botonEditarPerfil = findViewById(R.id.boton_editar_perfil)
         botonCerrarSesion = findViewById(R.id.boton_cerrar_sesion)
-        textoNombreUsuario = findViewById(R.id.texto_nombre_usuario)
-        textoEmailUsuario = findViewById(R.id.texto_email_usuario)
-        textoTelefonoUsuario = findViewById(R.id.texto_telefono_usuario)
+        textoNombreUsuario = findViewById(R.id.txtNombreUsuario)
+        textoEmailUsuario = findViewById(R.id.txtEmailUsuario)
+        textoTelefonoUsuario = findViewById(R.id.txtTelefonoUsuario)
         textoDireccionUsuario = findViewById(R.id.texto_direccion_usuario)
     }
     
@@ -47,17 +49,46 @@ class PerfilActivity : AppCompatActivity() {
         }
         
         botonCerrarSesion.setOnClickListener {
-            Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
-            finish()
+            cerrarSesionCompleto()
         }
     }
-    
+
     private fun cargarDatosUsuario() {
-        // Aquí se cargarían los datos reales del usuario
-        textoNombreUsuario.text = getString(R.string.nombre_usuario)
-        textoEmailUsuario.text = getString(R.string.email_usuario)
-        textoTelefonoUsuario.text = getString(R.string.telefono_usuario)
-        textoDireccionUsuario.text = getString(R.string.direccion_usuario)
+        // 1. Recupera el objeto UserData del SessionManager
+        val userData = SessionManager.getUserData()
+
+        // 2. Comprueba si los datos existen
+        if (userData != null) {
+            // 3. Asigna los datos reales a los TextViews
+            textoNombreUsuario.text = userData.nombrescompletos
+            textoEmailUsuario.text = userData.email
+            textoTelefonoUsuario.text = userData.telefono
+
+            // Nota: Tu API no parece devolver una dirección, así que este campo podría quedar vacío o podrías ocultarlo.
+            // textoDireccionUsuario.text = ""
+        } else {
+            // Si por alguna razón no se encuentran datos, muestra un mensaje de error.
+            textoNombreUsuario.text = "Error al cargar el usuario"
+            textoEmailUsuario.text = ""
+            textoTelefonoUsuario.text = ""
+            // textoDireccionUsuario.text = ""
+        }
+    }
+
+    // --- NUEVA FUNCIÓN PARA UN CIERRE DE SESIÓN COMPLETO ---
+    private fun cerrarSesionCompleto() {
+        // 1. Limpia los datos guardados en SharedPreferences
+        SessionManager.clearSession()
+
+        // 2. Muestra un mensaje al usuario
+        Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
+
+        // 3. Redirige a la pantalla principal y limpia la pila de actividades
+        //    para que el usuario no pueda "volver" a la pantalla de perfil.
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish() // Cierra PerfilActivity
     }
     
     override fun onSupportNavigateUp(): Boolean {

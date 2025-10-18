@@ -24,6 +24,7 @@ import com.upc.myapplication.datos.RepositorioProductosAWS
 import com.upc.myapplication.modelo.CarritoItem
 import com.upc.myapplication.modelo.CategoriaProducto
 import com.upc.myapplication.modelo.Producto
+import com.upc.myapplication.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnPerfil: ImageButton
     private lateinit var btnCarrito: ImageButton
     private lateinit var contadorCarrito: android.widget.TextView
+    private lateinit var bottomNavigation: BottomNavigationView
     
     private lateinit var adaptadorCategorias: AdaptadorCategorias
     private lateinit var adaptadorProductos: AdaptadorProductos
@@ -53,6 +55,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         
         CarritoManager.init(this)
+
+        SessionManager.init(this)
         
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -271,8 +275,14 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun mostrarPerfil() {
-        val intent = android.content.Intent(this, PerfilActivity::class.java)
-        startActivity(intent)
+        //validamos si ya inicio sesion
+        if(SessionManager.isLoggedIn()){
+            val intent = Intent(this,PerfilActivity::class.java)
+            startActivity(intent)
+        }else{
+            val intent = android.content.Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
     
     private fun mostrarMenuDesplegable() {
