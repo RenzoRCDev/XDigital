@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.content.Intent
 import android.widget.Toast
+import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -19,31 +20,40 @@ import com.upc.myapplication.adaptadores.AdaptadorCategorias
 import com.upc.myapplication.adaptadores.AdaptadorProductos
 import com.upc.myapplication.datos.CarritoManager
 import com.upc.myapplication.datos.RepositorioProductos
+import com.upc.myapplication.datos.RepositorioProductosAWS
 import com.upc.myapplication.modelo.CarritoItem
 import com.upc.myapplication.modelo.CategoriaProducto
 import com.upc.myapplication.modelo.Producto
 import com.upc.myapplication.SessionManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     
     private lateinit var recyclerCategorias: RecyclerView
     private lateinit var recyclerProductos: RecyclerView
     private lateinit var campoBusqueda: TextInputEditText
-    private lateinit var fabCarrito: FloatingActionButton
+    private lateinit var btnMenu: ImageButton
+    private lateinit var btnPerfil: ImageButton
+    private lateinit var btnCarrito: ImageButton
     private lateinit var contadorCarrito: android.widget.TextView
     private lateinit var bottomNavigation: BottomNavigationView
+    
     private lateinit var adaptadorCategorias: AdaptadorCategorias
     private lateinit var adaptadorProductos: AdaptadorProductos
     
+    // Repositorio para obtener datos de la API
+    private val repositorioAWS = RepositorioProductosAWS()
+    
     // El carrito ahora se maneja con CarritoManager
-    private var productosActuales = RepositorioProductos.obtenerTodosLosProductos()
+    private var productosActuales = emptyList<Producto>()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         
-        // Inicializar el CarritoManager
         CarritoManager.init(this)
 
         SessionManager.init(this)
@@ -66,15 +76,16 @@ class MainActivity : AppCompatActivity() {
         recyclerCategorias = findViewById(R.id.recycler_categorias)
         recyclerProductos = findViewById(R.id.recycler_productos)
         campoBusqueda = findViewById(R.id.campo_busqueda)
-        fabCarrito = findViewById(R.id.fab_carrito)
+        btnMenu = findViewById<ImageButton>(R.id.btn_menu)
+        btnPerfil = findViewById<ImageButton>(R.id.btn_perfil)
+        btnCarrito = findViewById<ImageButton>(R.id.btn_carrito)
         contadorCarrito = findViewById(R.id.contador_carrito)
-        bottomNavigation = findViewById(R.id.bottom_navigation)
     }
     
     private fun configurarRecyclerViews() {
-        // Configurar RecyclerView de categorías
+        // Configurar RecyclerView de categorías (se cargará desde la API)
         adaptadorCategorias = AdaptadorCategorias(
-            CategoriaProducto.values().toList()
+            emptyList()
         ) { categoria ->
             filtrarPorCategoria(categoria)
         }
@@ -116,53 +127,101 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun configurarCarrito() {
-        fabCarrito.setOnClickListener {
+        btnCarrito.setOnClickListener {
             mostrarCarrito()
         }
     }
     
     private fun configurarNavegacionInferior() {
-        bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_inicio -> {
-                    // Ya estamos en la pantalla de inicio
-                    true
-                }
-                R.id.nav_categorias -> {
-                    mostrarCategorias()
-                    true
-                }
-                R.id.nav_soporte -> {
-                    mostrarSoporte()
-                    true
-                }
-                R.id.nav_perfil -> {
-                    mostrarPerfil()
-                    true
-                }
-                else -> false
-            }
+        // Configurar menú desplegable
+        btnMenu.setOnClickListener {
+            mostrarMenuDesplegable()
+        }
+        
+        // Configurar botón de perfil
+        btnPerfil.setOnClickListener {
+            mostrarPerfil()
         }
     }
     
     private fun cargarDatosIniciales() {
-        mostrarTodosLosProductos()
+        cargarCategorias()
+        
+        // Verificar si se seleccionó una categoría específica
+        val categoriaSeleccionada = intent.getStringExtra("categoria_seleccionada")
+        if (categoriaSeleccionada != null) {
+            try {
+                val categoria = CategoriaProducto.valueOf(categoriaSeleccionada)
+                filtrarPorCategoria(categoria)
+            } catch (e: Exception) {
+                mostrarTodosLosProductos()
+            }
+        } else {
+            mostrarTodosLosProductos()
+        }
+        
         actualizarContadorCarrito()
     }
     
+    private fun cargarCategorias() {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val categorias = repositorioAWS.obtenerTodasLasCategorias()
+                adaptadorCategorias = AdaptadorCategorias(
+                    categorias
+                ) { categoria ->
+                    filtrarPorCategoria(categoria)
+                }
+                recyclerCategorias.adapter = adaptadorCategorias
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Error al cargar categorías: ${e.message}", Toast.LENGTH_SHORT).show()
+                // Usar categorías por defecto en caso de error
+                val categoriasPorDefecto = CategoriaProducto.values().toList()
+                adaptadorCategorias = AdaptadorCategorias(
+                    categoriasPorDefecto
+                ) { categoria ->
+                    filtrarPorCategoria(categoria)
+                }
+                recyclerCategorias.adapter = adaptadorCategorias
+            }
+        }
+    }
+    
     private fun mostrarTodosLosProductos() {
-        productosActuales = RepositorioProductos.obtenerTodosLosProductos()
-        actualizarAdaptadorProductos()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                productosActuales = repositorioAWS.obtenerTodosLosProductos()
+                actualizarAdaptadorProductos()
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Error al cargar productos: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     
     private fun filtrarPorCategoria(categoria: CategoriaProducto) {
-        productosActuales = RepositorioProductos.obtenerProductosPorCategoria(categoria)
-        actualizarAdaptadorProductos()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                if (categoria == CategoriaProducto.TODOS) {
+                    productosActuales = repositorioAWS.obtenerTodosLosProductos()
+                } else {
+                    productosActuales = repositorioAWS.obtenerProductosPorCategoria(categoria)
+                }
+                actualizarAdaptadorProductos()
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Error al filtrar productos: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     
     private fun buscarProductos(consulta: String) {
-        productosActuales = RepositorioProductos.buscarProductos(consulta)
-        actualizarAdaptadorProductos()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                productosActuales = repositorioAWS.buscarProductos(consulta)
+                actualizarAdaptadorProductos()
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Error al buscar productos: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     
     private fun actualizarAdaptadorProductos() {
@@ -224,5 +283,23 @@ class MainActivity : AppCompatActivity() {
             val intent = android.content.Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+    }
+    
+    private fun mostrarMenuDesplegable() {
+        val opciones = arrayOf("Home", "Categorías", "Soporte")
+        
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Navegación")
+        builder.setItems(opciones) { _, which ->
+            when (which) {
+                0 -> {
+                    // Ya estamos en Home
+                    Toast.makeText(this, "Ya estás en la página principal", Toast.LENGTH_SHORT).show()
+                }
+                1 -> mostrarCategorias()
+                2 -> mostrarSoporte()
+            }
+        }
+        builder.show()
     }
 }

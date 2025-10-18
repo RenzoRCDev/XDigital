@@ -28,7 +28,6 @@ class CarritoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_carrito)
         
-        // Inicializar CarritoManager
         CarritoManager.init(this)
         
         inicializarVistas()

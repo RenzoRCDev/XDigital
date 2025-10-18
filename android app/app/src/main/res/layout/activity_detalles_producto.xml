@@ -122,7 +122,7 @@
                             android:id="@+id/estado_stock"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/ic_launcher_foreground"
+                            android:background="@color/design_default_color_primary"
                             android:padding="8dp"
                             android:textColor="@android:color/white"
                             android:textSize="12sp"
@@ -235,6 +235,39 @@
                         android:textSize="14sp"
                         android:lineSpacingExtra="4dp"
                         tools:text="• Pantalla 6.7 pulgadas\n• 128GB almacenamiento\n• Cámara 48MP\n• 5G" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Galería de imágenes -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Galería de Imágenes"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_galeria"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
 
                 </LinearLayout>
 

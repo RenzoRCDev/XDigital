@@ -35,7 +35,7 @@ def lambda_handler(event, context):
                             "Descripcion": producto["descripcion"],
                             "Precio": producto["precio"],
                             "Stock": producto["stock"],
-                            "Imagen": producto["imagen"]
+                            "Imagen": producto["UrlImagen"]
                         }
                     lista_productos.append(dict_producto)
 
